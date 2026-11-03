@@ -104,3 +104,11 @@ export async function updateProfile(
     fx.refreshUsers([actor.userId], { scope: "profile" });
   });
 }
+
+export async function onboardingState(actor: Actor) {
+  const [row] = await db
+    .select({ onboardedAt: user.onboardedAt, accountName: user.name })
+    .from(user)
+    .where(eq(user.id, actor.userId));
+  return row ?? null;
+}
