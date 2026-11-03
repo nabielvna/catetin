@@ -3,6 +3,7 @@
 import { ArrowLeftRight, HandCoins, ReceiptText, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { AssistantBar } from "@/components/assistant/assistant-bar";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { useRouter } from "@/i18n/navigation";
 import { createStore } from "@/lib/store";
@@ -31,7 +32,13 @@ export function NewSheet() {
         <DrawerHeader>
           <DrawerTitle>{t("title")}</DrawerTitle>
         </DrawerHeader>
-
+        <AssistantBar
+          className="mx-5 mb-2"
+          onLaunch={(open) => {
+            store.set({ isOpen: false });
+            window.setTimeout(open, 350);
+          }}
+        />
         <ul className="flex flex-col px-3 pb-6">
           {options.map(({ key, icon: Icon, href }) => (
             <li key={key}>

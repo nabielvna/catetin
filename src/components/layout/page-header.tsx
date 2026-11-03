@@ -4,6 +4,8 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
+import { AssistantButton } from "@/components/assistant/assistant-button";
+
 export function PageHeader({
   title,
   action,
@@ -31,7 +33,10 @@ export function PageHeader({
         </button>
         {title ? <h1 className="truncate text-[17px] font-bold tracking-[-0.02em]">{title}</h1> : null}
       </div>
-      <div className="flex items-center">{action}</div>
+      <div className="flex items-center">
+        <AssistantButton />
+        {action}
+      </div>
     </header>
   );
 }

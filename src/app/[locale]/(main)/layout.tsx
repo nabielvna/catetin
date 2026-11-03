@@ -1,8 +1,12 @@
 import { Suspense } from "react";
 
+import { LazyAssistant } from "@/components/assistant/lazy-assistant";
 import { BottomNav, NavShell } from "@/components/layout/bottom-nav";
 import { InboxBadge } from "@/components/layout/inbox-badge";
 import { NewSheet } from "@/components/layout/new-sheet";
+import { RealtimeRefresher } from "@/components/layout/realtime";
+import { PushSync } from "@/components/pwa/push-sync";
+import { TourHost } from "@/components/tour/tour-provider";
 import { getActor } from "@/services/auth";
 import { inboxCounts } from "@/services/notifications/inbox";
 
@@ -20,6 +24,14 @@ export default function AppLayout({ children }: LayoutProps<"/[locale]">) {
         />
       </Suspense>
       <NewSheet />
+      <RealtimeRefresher />
+      <PushSync />
+      <Suspense fallback={null}>
+        <LazyAssistant />
+      </Suspense>
+      <Suspense fallback={null}>
+        <TourHost />
+      </Suspense>
     </div>
   );
 }

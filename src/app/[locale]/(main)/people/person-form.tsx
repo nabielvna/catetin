@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { NAME_MAX } from "@/domain/people";
+import { EMAIL_MAX, NAME_MAX } from "@/domain/people";
 export function PersonForm({
   name,
   email,
@@ -48,6 +48,7 @@ export function PersonForm({
         <Input
           id="email"
           type="email"
+          maxLength={EMAIL_MAX}
           inputMode="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

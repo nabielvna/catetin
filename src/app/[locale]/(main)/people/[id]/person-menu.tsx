@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 
 import { archiveContact, block, merge, removeContact, rename, setEmail } from "@/actions/people";
+import { ReviewBanner, useReview } from "@/components/assistant/review";
 import { useAction } from "@/components/forms/use-action";
 import { InviteSheet } from "@/components/people/invite-sheet";
 import { Initial } from "@/components/records/record-parts";
@@ -63,6 +64,20 @@ export function PersonMenu({
     if (autoInvite && canInvite) setSheet("invite");
   }, [autoInvite, canInvite]);
 
+  const review = useReview<{ action: string; partyId?: string; name?: string; email?: string; clearEmail?: boolean }>({
+    tools: ["managePerson"],
+    match: (i) => (i.action === "RENAME" || (i.action === "SET_EMAIL" && mine)) && i.partyId === header.partyId,
+    apply: (i) => {
+      if (i.action === "RENAME") {
+        setValue(i.name ?? header.name);
+        setSheet("rename");
+      } else {
+        setValue(i.clearEmail ? "" : (i.email ?? ""));
+        setSheet("email");
+      }
+    },
+  });
+
   const close = () => {
     setSheet(null);
     setTarget(null);
@@ -114,7 +129,7 @@ export function PersonMenu({
               <DropdownMenuItem
                 data-tour="person.menu.pdf"
                 onSelect={() =>
-                  void downloadOrShare(`/api/exports/people/${header.partyId}/pdf`, "catetin.pdf", header.name)
+                  void downloadOrShare(`/api/export/person/${header.partyId}/pdf`, "catetin.pdf", header.name)
                 }
               >
                 {t("downloadPdf")}
@@ -123,7 +138,7 @@ export function PersonMenu({
                 <Link href={`/people/${header.partyId}/statement`}>{t("print")}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild data-tour="person.menu.csv">
-                <a href={`/api/exports/people/${header.partyId}`} download>
+                <a href={`/api/export/person/${header.partyId}`} download>
                   {t("exportCsv")}
                 </a>
               </DropdownMenuItem>
@@ -197,6 +212,7 @@ export function PersonMenu({
                     : rename({ partyId: header.partyId, name: value.trim() }),
                 {
                   onSuccess: () => {
+                    void review.finish();
                     close();
                   },
                 },
@@ -204,10 +220,11 @@ export function PersonMenu({
             }}
           >
             <div className="flex flex-col gap-4 px-5">
+              <ReviewBanner review={review} />
               <Input
                 autoFocus
-                aria-label={sheet === "email" ? t("setEmail") : t("rename")}
                 type={sheet === "email" ? "email" : "text"}
+                aria-label={sheet === "email" ? t("setEmail") : t("rename")}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 maxLength={sheet === "email" ? EMAIL_MAX : NAME_MAX}

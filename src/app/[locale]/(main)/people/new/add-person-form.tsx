@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { addPerson } from "@/actions/people";
 import { PersonForm } from "@/app/[locale]/(main)/people/person-form";
+import { ReviewBanner, useReview } from "@/components/assistant/review";
 import { useAction } from "@/components/forms/use-action";
 import { ConnectQrSheet, ScanQrSheet } from "@/components/people/qr-sheets";
 import { Button } from "@/components/ui/button";
@@ -18,8 +19,18 @@ export function AddPersonForm() {
   const [qr, setQr] = useState<"show" | "scan" | null>(null);
   const { pending, run } = useAction();
 
+  const review = useReview<{ action: string; name?: string; email?: string }>({
+    tools: ["managePerson"],
+    match: (i) => i.action === "ADD",
+    apply: (i) => {
+      setName(i.name ?? "");
+      setEmail(i.email ?? "");
+    },
+  });
+
   return (
     <div className="flex flex-col gap-8 px-5 pt-2">
+      <ReviewBanner review={review} />
       <PersonForm
         name={name}
         email={email}
@@ -30,6 +41,7 @@ export function AddPersonForm() {
           run(() => addPerson({ name: name.trim(), email: email.trim() || null }), {
             success: t("created", { name: name.trim() }),
             onSuccess: (d) => {
+              void review.finish();
               router.replace(`/people/${d.partyId}?invite=1`);
             },
           });
