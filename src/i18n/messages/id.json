@@ -2074,5 +2074,107 @@
         }
       }
     }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "updated": "Terakhir diperbarui: 29 September 2026",
+      "sections": [
+        {
+          "h": "Data yang disimpan",
+          "p": [
+            "Nama, email, bahasa, mata uang, dan zona waktu; utang, pembayaran, grup, dan foto yang kamu dan orang-orang yang berbagi catatan denganmu buat; serta data teknis untuk menjaga kamu tetap masuk (sesi) dan mengirim notifikasi (langganan push)."
+          ]
+        },
+        {
+          "h": "Untuk apa",
+          "p": [
+            "Hanya untuk menjalankan Catetin: menampilkan catatan bersama ke pihak yang terlibat, meminta persetujuan, dan mengirim pengingat serta notifikasi yang kamu aktifkan. Kami tidak menjual data dan tidak memakai analitik atau iklan pihak ketiga."
+          ]
+        },
+        {
+          "h": "Siapa bisa melihat apa",
+          "p": [
+            "Sebuah catatan hanya terlihat oleh dua orang yang terlibat. Catatan di dalam grup terlihat oleh anggota grup. Tamu di tagihan hanya melihat tagihan itu dan porsinya sendiri. Foto bukti bersifat privat dan hanya bisa dibuka lewat aplikasi setelah pemeriksaan hak akses."
+          ]
+        },
+        {
+          "h": "Orang yang belum pakai Catetin",
+          "p": [
+            "Jika kamu memasukkan email seseorang, kami bisa mengirim undangan dan pengingat jatuh tempo atas namamu (maks. 3 email per hari), masing-masing dengan link berhenti berlangganan satu klik."
+          ]
+        },
+        {
+          "h": "Perangkat yang masuk",
+          "p": [
+            "Untuk tiap perangkat tempat kamu masuk, kami menyimpan nama browser & sistem, alamat IP, perkiraan kota dan negara (diperkirakan oleh penyedia hosting kami, Vercel, dari alamat IP — tidak dikirim ke layanan lain), serta waktu masuk. Data ini hanya ditampilkan untukmu di halaman Perangkat supaya kamu bisa mengenali dan mengeluarkan perangkat yang tidak dikenal, dan langsung terhapus saat perangkat itu keluar atau sesinya kedaluwarsa."
+          ]
+        },
+        {
+          "h": "Asisten",
+          "p": [
+            "Asisten bersifat opsional. Saat kamu memakainya, pesanmu (termasuk foto struk dan rekaman suara, yang diubah jadi teks oleh Gemini), nama orang yang terkait, serta nominal dan catatan yang dicari asisten dikirim ke Google (Gemini API). Kami memakai Gemini versi gratis; dengan versi ini Google boleh menyimpan isi tersebut dan memakainya, termasuk lewat peninjauan oleh manusia, untuk mengembangkan produknya. Jangan pakai asisten untuk hal yang tidak ingin kamu bagikan ke Google — semua fitur juga tersedia lewat form biasa.",
+            "Tidak ada yang masuk ke catatanmu tanpa kamu menekan tombol simpan. Obrolan disimpan di server kami paling lama 24 jam dan langsung dihapus saat kamu menekan “Selesai”.",
+            "Jawaban yang dibacakan memakai suara bawaan perangkatmu; teksnya tidak dikirim ke mana pun."
+          ]
+        },
+        {
+          "h": "Scan struk",
+          "p": [
+            "“Scan struk” di form utang, split bill, dan pembayaran bersifat opsional. Foto yang kamu ambil atau pilih (maks 3 per scan) dikirim ke Google Gemini dengan ketentuan versi gratis yang sama seperti asisten, hanya untuk membaca nominal, item, tanggal, serta nama toko atau penerima. Nama kontakmu tidak ikut dikirim. Hasilnya hanya mengisi form; tidak ada yang tersimpan sebelum kamu menekan Simpan.",
+            "Kalau “Lampirkan foto sebagai bukti” dibiarkan menyala, fotonya disimpan sebagai bukti di catatan itu, sama seperti foto bukti lainnya (lokasi & metadata lain dihapus)."
+          ]
+        },
+        {
+          "h": "Tebakan kategori",
+          "p": [
+            "Kategori ditebak dulu dari pilihanmu sebelumnya dan daftar kata kunci, sepenuhnya di dalam Catetin. Hanya kalau keduanya gagal, judul catatan saja (tanpa nama atau nominal) dikirim ke Google Gemini untuk ditebak; hasilnya diingat supaya judul yang sama tidak dikirim lagi."
+          ]
+        },
+        {
+          "h": "Saling percaya & blokir",
+          "p": [
+            "Kalau kamu dan seseorang sama-sama menyalakan “Saling percaya”, catatan baru darinya langsung berlaku tanpa persetujuanmu; kamu tetap diberi tahu dan bisa membantah dalam 7 hari. Kalau kamu memblokir seseorang, dia tidak bisa membuat catatan baru denganmu; dia tidak diberi tahu."
+          ]
+        },
+        {
+          "h": "Laporan error",
+          "p": [
+            "Error server dicatat di log hosting untuk membantu memperbaiki bug. Error browser ditampilkan di console browser kamu; kami tidak mengirimkannya ke layanan pelaporan error eksternal."
+          ]
+        },
+        {
+          "h": "Hak kamu (UU PDP)",
+          "p": [
+            "Kamu bisa mengunduh semua data dan menghapus akun dari halaman Akun. Setelah dihapus, data pribadimu hilang; catatan bersama tetap ada di pihak lain dengan nama lamamu bertanda “akun dihapus”."
+          ]
+        },
+        { "h": "Kontak", "p": ["Kirim masukan dari halaman Akun."] }
+      ]
+    },
+    "terms": {
+      "title": "Syarat Penggunaan",
+      "updated": "Terakhir diperbarui: 27 September 2026",
+      "sections": [
+        {
+          "h": "Apa itu Catetin",
+          "p": [
+            "Catetin adalah alat gratis untuk mencatat utang-piutang antar teman. Catetin bukan bank, tidak memindahkan uang, dan catatannya bukan perjanjian utang resmi atau bukti hukum."
+          ]
+        },
+        {
+          "h": "Tanggung jawabmu",
+          "p": [
+            "Catat dengan jujur dan hanya undang orang yang kamu kenal. Jangan memakai Catetin untuk mengganggu orang lain atau mengirim email yang tidak diinginkan."
+          ]
+        },
+        {
+          "h": "Ketersediaan",
+          "p": [
+            "Catetin disediakan apa adanya tanpa jaminan. Fitur bisa berubah atau dihentikan. Unduh datamu secara berkala jika penting bagimu."
+          ]
+        }
+      ]
+    }
   }
 }

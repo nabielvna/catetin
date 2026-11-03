@@ -2059,5 +2059,107 @@
         }
       }
     }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated: 29 September 2026",
+      "sections": [
+        {
+          "h": "What we store",
+          "p": [
+            "Your name, email, language, currency and time zone; the IOUs, payments, groups and photos you and the people you share records with create; and technical data needed to keep you signed in (sessions) and send notifications (push subscriptions)."
+          ]
+        },
+        {
+          "h": "Why",
+          "p": [
+            "Only to run Catetin: showing shared records to the people involved, asking for approvals, and sending the reminders and notifications you have enabled. We do not sell data and do not use third-party analytics or advertising."
+          ]
+        },
+        {
+          "h": "Who can see what",
+          "p": [
+            "A record is visible to the two people in it. Records in a group are visible to the group's members. Guests in a bill only see that bill and their own share. Photos are private and only reachable through the app after an access check."
+          ]
+        },
+        {
+          "h": "People who don't use Catetin",
+          "p": [
+            "If you add someone's email, we may send them an invitation and due-date reminders on your behalf (max. 3 emails per day), each with a one-click unsubscribe link."
+          ]
+        },
+        {
+          "h": "Signed-in devices",
+          "p": [
+            "For each device you sign in on, we keep the browser & system name, IP address, an approximate city and country (estimated by our host, Vercel, from the IP — it is not sent to any other service), and when it signed in. It is only shown to you on the Devices page so you can spot and sign out devices you don't recognize, and it is deleted as soon as that device signs out or its session expires."
+          ]
+        },
+        {
+          "h": "Assistant",
+          "p": [
+            "The assistant is optional. When you use it, your message (including receipt photos and voice recordings, which Gemini turns into text), the names of the relevant people, and the amounts and records it looks up are sent to Google (Gemini API). We use Gemini's free tier, under which Google may store this content and use it, including through human review, to improve its products. Don't use the assistant for anything you don't want to share with Google — every feature is also available through the regular forms.",
+            "Nothing is saved to your records without your tap. The conversation is kept on our server for at most 24 hours and deleted when you tap “Done”.",
+            "Spoken replies use your device's built-in voice; the text is not sent anywhere else."
+          ]
+        },
+        {
+          "h": "Receipt scanning",
+          "p": [
+            "“Scan receipt” on the IOU, split bill and payment forms is optional. The photos you take or pick (up to 3 per scan) are sent to Google Gemini under the same free-tier terms as the assistant, only to read the amounts, items, date and shop or recipient name. No names of your contacts are sent. The result only fills in the form; nothing is saved until you tap Save.",
+            "If you leave “Attach photo as proof” on, the photos are stored as proof on the record, like any other photo evidence (location and other metadata removed)."
+          ]
+        },
+        {
+          "h": "Category suggestions",
+          "p": [
+            "Categories are first guessed from your own past choices and a list of keywords, entirely inside Catetin. Only when both fail is the title alone (no names or amounts) sent to Google Gemini for a guess; the result is remembered so the same title isn't sent again."
+          ]
+        },
+        {
+          "h": "Trusting each other & blocking",
+          "p": [
+            "If you and someone both turn on “Trust each other”, their new records apply without your approval; you'll be notified and can dispute them within 7 days. If you block someone, they can't create new records with you; they are not told."
+          ]
+        },
+        {
+          "h": "Error reports",
+          "p": [
+            "Server errors are recorded in our hosting logs to help us fix bugs. Browser errors are shown in your browser console; we do not send them to an external error-reporting service."
+          ]
+        },
+        {
+          "h": "Your rights",
+          "p": [
+            "You can download all your data and delete your account from the Account page. After deletion your personal data is removed; shared records stay with the other person, showing your former name marked “account deleted”."
+          ]
+        },
+        { "h": "Contact", "p": ["Send feedback from the Account page."] }
+      ]
+    },
+    "terms": {
+      "title": "Terms of Use",
+      "updated": "Last updated: 27 September 2026",
+      "sections": [
+        {
+          "h": "What Catetin is",
+          "p": [
+            "Catetin is a free tool for keeping track of IOUs between friends. It is not a bank, does not move money, and its records are not an official or legal loan agreement."
+          ]
+        },
+        {
+          "h": "Your responsibility",
+          "p": [
+            "Record things honestly and only invite people you know. Don't use Catetin to harass anyone or to send unwanted email."
+          ]
+        },
+        {
+          "h": "Availability",
+          "p": [
+            "Catetin is provided as is, without guarantees. We may change or stop features. Download your data from time to time if it matters to you."
+          ]
+        }
+      ]
+    }
   }
 }
