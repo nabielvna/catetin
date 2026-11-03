@@ -3,10 +3,11 @@ import "server-only";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
 import type { DbOrTx } from "@/database/client";
+import { db } from "@/database/client";
 import { pair, party, userBlock } from "@/database/schema/index";
 import { DomainError } from "@/domain/errors";
 import { recordActivity } from "@/services/activity";
-import type { Ctx } from "@/services/context";
+import type { Actor, Ctx } from "@/services/context";
 import { canSeeParty, findPair, getParty } from "@/services/people/parties";
 import { mutate } from "@/services/transaction";
 
@@ -63,8 +64,9 @@ export function setBlocked(ctx: Ctx, input: { partyId: string; blocked: boolean 
 
 export type BlockedPerson = { partyId: string; name: string; blockedAt: string };
 
-export async function listBlocked(tx: DbOrTx, userId: string): Promise<BlockedPerson[]> {
-  const rows = await tx.execute<{ party_id: string; name: string; created_at: Date }>(sql`
+export async function listBlocked(actor: Actor): Promise<BlockedPerson[]> {
+  const userId = actor.userId;
+  const rows = await db.execute<{ party_id: string; name: string; created_at: Date }>(sql`
     select b.blocked_party_id as party_id, b.created_at,
       coalesce((select pa.name from party_alias pa where pa.owner_user_id = ${userId} and pa.party_id = b.blocked_party_id),
         p.display_name) as name
