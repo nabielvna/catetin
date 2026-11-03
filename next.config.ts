@@ -49,6 +49,7 @@ const nextConfig: NextConfig = {
   typedRoutes: false,
   poweredByHeader: false,
   allowedDevOrigins: ["*.ngrok-free.app", "*.ngrok-free.dev", "*.ngrok.app", "*.trycloudflare.com"],
+  outputFileTracingIncludes: { "/api/**/pdf": ["src/integrations/pdf/fonts/*"] },
   serverExternalPackages: ["pino", "pino-pretty", "sharp", "@react-pdf/renderer"],
   async headers() {
     return [
