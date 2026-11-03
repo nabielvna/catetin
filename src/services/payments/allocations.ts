@@ -2,9 +2,12 @@ import "server-only";
 
 import { and, eq, inArray, lt, sql } from "drizzle-orm";
 
-import type { DbOrTx } from "@/database/client";
-import { obligation, settlement, settlementAllocation } from "@/database/schema/index";
-import { type OpenObligation } from "@/domain/allocation";
+import type { DbOrTx, Tx } from "@/database/client";
+import { obligation } from "@/database/schema/debts";
+import { settlement, settlementAllocation } from "@/database/schema/payments";
+import { type Allocation, type OpenObligation } from "@/domain/allocation";
+import { DomainError } from "@/domain/errors";
+import { effectiveDueOn, isInstallmentPlan } from "@/domain/installments";
 import { type Currency, type Minor } from "@/domain/money";
 
 export type OpenObligationRow = OpenObligation & {
@@ -76,4 +79,65 @@ export async function openObligations(
     title: r.title,
     available: r.amount - r.paid - Number(r.reserved ?? 0),
   }));
+}
+
+export async function applyAllocations(tx: Tx, allocations: Allocation[], now: Date): Promise<string[]> {
+  const settled: string[] = [];
+  for (const a of allocations) {
+    const [row] = await tx
+      .update(obligation)
+      .set({ paid: sql`${obligation.paid} + ${a.amount}`, updatedAt: now })
+      .where(
+        and(
+          eq(obligation.id, a.obligationId),
+          eq(obligation.status, "ACTIVE"),
+          sql`${obligation.paid} + ${a.amount} <= ${obligation.amount}`,
+        ),
+      )
+      .returning({ paid: obligation.paid, amount: obligation.amount, installments: obligation.installments });
+    if (!row) throw new DomainError("OVERPAY");
+    if (row.paid === row.amount) {
+      settled.push(a.obligationId);
+      await tx.update(obligation).set({ closedAt: now }).where(eq(obligation.id, a.obligationId));
+    }
+    await syncInstallmentDue(tx, a.obligationId, row);
+  }
+  return settled;
+}
+
+async function syncInstallmentDue(
+  tx: Tx,
+  id: string,
+  row: { amount: Minor; paid: Minor; installments: unknown },
+): Promise<void> {
+  if (!isInstallmentPlan(row.installments)) return;
+  await tx
+    .update(obligation)
+    .set({ dueOn: effectiveDueOn(row.amount, row.installments, null, row.paid) })
+    .where(eq(obligation.id, id));
+}
+
+export async function rollbackAllocations(tx: Tx, allocations: Allocation[], now: Date) {
+  for (const a of allocations) {
+    const [row] = await tx
+      .update(obligation)
+      .set({ paid: sql`${obligation.paid} - ${a.amount}`, updatedAt: now, closedAt: null })
+      .where(and(eq(obligation.id, a.obligationId), sql`${obligation.paid} >= ${a.amount}`))
+      .returning({
+        id: obligation.id,
+        paid: obligation.paid,
+        amount: obligation.amount,
+        installments: obligation.installments,
+      });
+    if (!row) throw new Error(`rollback failed for ${a.obligationId}`);
+    await syncInstallmentDue(tx, a.obligationId, row);
+  }
+}
+
+export async function allocationsOf(tx: DbOrTx, settlementId: string): Promise<Allocation[]> {
+  const rows = await tx
+    .select({ obligationId: settlementAllocation.obligationId, amount: settlementAllocation.amount })
+    .from(settlementAllocation)
+    .where(eq(settlementAllocation.settlementId, settlementId));
+  return rows;
 }
