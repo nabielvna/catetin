@@ -1,8 +1,8 @@
 import { execFileSync } from "node:child_process";
 import { createECDH, randomBytes } from "node:crypto";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import type { IncomingHttpHeaders } from "node:http";
-import { createServer } from "node:https";
+import { Agent, createServer, get } from "node:https";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -11,6 +11,7 @@ import { eq } from "drizzle-orm";
 // @ts-expect-error http_ece has no types (web-push dependency)
 import ece from "http_ece";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import webpush from "web-push";
 
 import { db } from "@/database/client";
 import { notification, pushSubscription } from "@/database/schema/notifications";
@@ -44,6 +45,8 @@ execFileSync(
     "1",
     "-subj",
     "/CN=127.0.0.1",
+    "-addext",
+    "subjectAltName=IP:127.0.0.1",
     "-keyout",
     path.join(certDir, "key.pem"),
     "-out",
@@ -51,7 +54,6 @@ execFileSync(
   ],
   { stdio: "ignore" },
 );
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const tls = { key: readFileSync(path.join(certDir, "key.pem")), cert: readFileSync(path.join(certDir, "cert.pem")) };
 const server = createServer(tls, (req, res) => {
   const chunks: Buffer[] = [];
@@ -63,11 +65,23 @@ const server = createServer(tls, (req, res) => {
   });
 });
 
+const agent = new Agent({ ca: tls.cert, rejectUnauthorized: true });
+const sendNotification = webpush.sendNotification.bind(webpush);
+const transport = vi.spyOn(webpush, "sendNotification").mockImplementation((subscription, payload, options) => {
+  const local = new URL(subscription.endpoint).origin === base;
+  return sendNotification(subscription, payload, { ...options, ...(local ? { agent } : {}) });
+});
+
 beforeAll(async () => {
   await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
   base = `https://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
-afterAll(() => new Promise<void>((r) => server.close(() => r())));
+afterAll(async () => {
+  transport.mockRestore();
+  agent.destroy();
+  await new Promise<void>((r) => server.close(() => r()));
+  rmSync(certDir, { recursive: true, force: true });
+});
 
 function device() {
   const ecdh = createECDH("prime256v1");
@@ -81,6 +95,18 @@ const today = new Date();
 const MORNING = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + 1, 3));
 
 describe("push notifications (server → push service)", () => {
+  it("rejects untrusted HTTPS certificates outside the test transport", async () => {
+    await expect(
+      new Promise<number | undefined>((resolve, reject) => {
+        const request = get(`${base}/untrusted`, (response) => {
+          response.resume();
+          resolve(response.statusCode);
+        });
+        request.on("error", reject);
+      }),
+    ).rejects.toMatchObject({ code: "DEPTH_ZERO_SELF_SIGNED_CERT" });
+  });
+
   it("sent encrypted with VAPID & openable by the device; content is text in the recipient's language", async () => {
     const andi = await makeUser("Andi");
     const budi = await makeUser("Budi");

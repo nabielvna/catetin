@@ -9,7 +9,7 @@ import { ensureProfile, loadActor, updateProfile } from "@/services/account/prof
 import { listDevices, signOutDevice, signOutOtherDevices } from "@/services/account/sessions";
 import { auth } from "@/services/auth";
 
-const mail = vi.hoisted(() => ({ send: vi.fn() }));
+const mail = vi.hoisted(() => ({ send: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("@/integrations/email/send", () => ({ sendMail: mail.send }));
 
 async function makeUser(name = "Ani") {

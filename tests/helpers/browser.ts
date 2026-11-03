@@ -18,12 +18,22 @@ async function latestOtp(email: string, after: number): Promise<string> {
 }
 
 export async function login(page: Page, email: string, name: string, next?: string) {
+  if (process.env.E2E_RUN_ID) email = email.replace("@", `+${process.env.E2E_RUN_ID}@`);
   await page.goto(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
   await page.getByPlaceholder("nama@email.com").fill(email);
   const started = Date.now();
   await page.getByRole("button", { name: "Kirim kode" }).click();
   const code = await latestOtp(email, started);
+  const verifyResponse = page.waitForResponse(
+    (r) => r.url().includes("/api/auth/sign-in/email-otp") && r.request().method() === "POST",
+  );
   await page.getByLabel("Kode").fill(code);
+  const response = await verifyResponse;
+  if (response.status() === 429) {
+    const retryAfter = Number(response.headers()["retry-after"] ?? 60);
+    await page.waitForTimeout((Number.isFinite(retryAfter) ? retryAfter + 1 : 61) * 1000);
+    await page.getByLabel("Kode").fill(code);
+  }
   await page.waitForURL(/\/(onboarding|home|invite|people)/);
 
   await page.waitForURL((u) => !u.pathname.includes("/onboarding"), { timeout: 4000 }).catch(() => {});
