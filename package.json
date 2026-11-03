@@ -18,7 +18,8 @@
     "services:up": "docker compose up -d",
     "services:down": "docker compose down",
     "format:check": "prettier --check .",
-    "db:studio": "bun --env-file=.env.local run drizzle-kit studio"
+    "db:studio": "bun --env-file=.env.local run drizzle-kit studio",
+    "lighthouse": "bun scripts/lighthouse.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "4.0.111",
