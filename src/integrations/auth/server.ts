@@ -114,7 +114,11 @@ export function createAuth(lifecycle: AuthLifecycle) {
           if (e.NODE_ENV !== "production") log.info({ otp }, "[dev] kode OTP");
           const mail = await otpEmail(otp, t);
 
-          void sendMail({ to: email, ...mail }).catch((err) => log.error({ err }, "otp email failed"));
+          // Keep the request alive until SMTP finishes on serverless deployments.
+          await sendMail({ to: email, ...mail }).catch((err) => {
+            log.error({ err }, "otp email failed");
+            throw err;
+          });
         },
       }),
       nextCookies(),
